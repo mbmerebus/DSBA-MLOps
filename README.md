@@ -1,2 +1,11 @@
-# DSBA-MLOps
-Repository made for DSBA MLOps class. Further description will come later.
+# DSBA-MLOps Repository
+This repository was made for DSBA MLOps class.
+Author: Matteo COUCHOUD
+
+## Structure
+_TBD_
+
+## References
+
+## Aknowledgments
+
