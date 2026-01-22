@@ -5,9 +5,7 @@ This repository was made for DSBA MLOps class.\
 
 ## Structure
 unrelated_assets (assets not related to assignments)\
-session_2 (assignment from session 2 - 15/01/2026)
+coreAPI (code for the API project)
 
-## References
 
-## Aknowledgments
 
