@@ -1,0 +1,8 @@
+services:
+  scoring-api:
+    build: .
+    container_name: scoring-api
+    ports:
+      - "8000:8000"
+      - "8080:8000"
+    restart: unless-stopped
