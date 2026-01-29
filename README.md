@@ -10,7 +10,15 @@ images (build docker images)
 
 ## Quick commands
 
-### Docker
+## Docker Compose
+
+- Build and launch image using the .yaml conf file:\
+`docker compose up -d`
+
+- Power down image:\
+`docker compose down`
+
+### Docker build
 - Build docker Scoring-API:\
 `docker build -t socring-api`
 
@@ -19,6 +27,7 @@ images (build docker images)
 
 - Load .tar image file:\
 `docker load -i scoring-api.tar`
+
 
 
 
