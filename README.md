@@ -6,11 +6,13 @@ This repository was made for DSBA MLOps class.\
 ## Structure
 unrelated_assets (assets not related to assignments)\
 coreAPI (code for the API project and docker image)\
-images (build docker images)
+images (built docker images)
+
+API is listening on ports `8000`and `8080`.
 
 ## Quick commands
 
-## Docker Compose
+### Docker Compose
 
 - Build and launch image using the .yaml conf file:\
 `docker compose up -d`
