@@ -37,3 +37,12 @@ services:
       - redis
       - auth
       - scoring-api
+
+  webui:
+    build: ./src/webui
+    container_name: webui
+    ports:
+      - "3000:80"
+    depends_on:
+      - gateway
+      - auth

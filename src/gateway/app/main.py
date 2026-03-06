@@ -2,12 +2,22 @@ from fastapi import FastAPI, HTTPException, Depends, UploadFile, File, Request
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 import httpx
 import os
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI(title="Gateway")
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000"],
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 AUTH_SERVICE = os.getenv("AUTH_SERVICE_URL", "http://auth:8001")
 SCORING_SERVICE = os.getenv("SCORING_SERVICE_URL", "http://scoring-api:8000")
 security = HTTPBearer()
+
+
+
 
 
 async def require_auth(credentials: HTTPAuthorizationCredentials = Depends(security)):

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dashboard – Valeur Foncière</title>
+  <link rel="stylesheet" href="css/global-style.css" />
+  <link rel="stylesheet" href="css/dash.css" />
+</head>
+<body>
+
+<nav>
+  <span id="nav-username"></span>
+  <button class="btn btn-small" onclick="logout()">Logout</button>
+</nav>
+
+<main>
+
+  <section class="card">
+    <h2>Estimate a Property</h2>
+    <div class="form-grid">
+      <div class="field">
+        <label>Surface (m²)</label>
+        <input type="number" id="surface" placeholder="65" />
+      </div>
+      <div class="field">
+        <label>Rooms</label>
+        <input type="number" id="rooms" placeholder="3" />
+      </div>
+      <div class="field">
+        <label>Department Code</label>
+        <input type="text" id="dept" placeholder="75" />
+      </div>
+      <div class="field">
+        <label>Property Type</label>
+        <select id="type">
+          <option value="Appartement">Appartement</option>
+          <option value="Maison">Maison</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Lots</label>
+        <input type="number" id="lots" placeholder="1" />
+      </div>
+      <div class="field">
+        <label>Land Surface (m²)</label>
+        <input type="number" id="terrain" placeholder="0" />
+      </div>
+    </div>
+    <button class="btn" onclick="scoreProperty()">Estimate</button>
+    <div id="score-result" class="result hidden">
+      <p class="result-price" id="result-price"></p>
+      <p class="result-ci" id="result-ci"></p>
+    </div>
+    <p id="score-message" class="message"></p>
+  </section>
+
+  <section class="card">
+    <h2>Prediction History</h2>
+    <div id="history-list">
+      <p class="empty">No predictions yet.</p>
+    </div>
+  </section>
+
+  <section class="card full-width">
+    <h2>Batch CSV Upload</h2>
+    <div class="upload-area" onclick="document.getElementById('csv-input').click()">
+      <input type="file" id="csv-input" accept=".csv" onchange="uploadCSV(this)" />
+      <p>Click to upload a CSV file</p>
+      <p class="hint">Columns: surface_reelle_bati, nombre_pieces_principales, code_departement, type_local, nombre_lots, surface_terrain</p>
+    </div>
+    <div id="batch-results"></div>
+  </section>
+
+</main>
+
+<script src="js/app.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/scoring.js"></script>
+</body>
+</html>

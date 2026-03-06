@@ -1,0 +1,45 @@
+body {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+}
+
+.auth-container {
+  width: 100%;
+  max-width: 400px;
+  padding: 24px;
+}
+
+.auth-card {
+  background: white;
+  border-radius: 12px;
+  padding: 32px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+}
+
+.auth-card h1 { font-size: 1.5rem; margin-bottom: 4px; }
+.auth-card > p { color: #888; font-size: 0.9rem; margin-bottom: 24px; }
+
+.tab-switch {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.tab-switch button {
+  flex: 1;
+  padding: 8px;
+  border: 1.5px solid #ddd;
+  background: white;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  color: #888;
+}
+
+.tab-switch button.active {
+  border-color: #222;
+  color: #222;
+  font-weight: 600;
+}
