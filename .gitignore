@@ -18,6 +18,12 @@ __pycache__/
 #C extensions
 *.so
 
+#model
+*.pkl
+
+#train data
+*.csv
+
 #Distribution/packaging
 .Python
 build/
