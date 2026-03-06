@@ -1,0 +1,39 @@
+services:
+  redis:
+    image: redis:7-alpine
+    container_name: redis
+    ports:
+      - "6379:6379"
+
+  auth:
+    build: ./src/auth
+    container_name: auth
+    ports:
+      - "8001:8001"
+    environment:
+      - REDIS_HOST=redis
+      - JWT_SECRET=changeme_in_production
+    depends_on:
+      - redis
+
+  scoring-api:
+    build: ./src/scoring
+    container_name: scoring-api
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./src/scoring/model_storage:/app/model_storage
+
+  gateway:
+    build: ./src/gateway
+    container_name: gateway
+    ports:
+      - "8002:8002"
+    environment:
+      - REDIS_HOST=redis
+      - AUTH_SERVICE_URL=http://auth:8001
+      - SCORING_SERVICE_URL=http://scoring-api:8000
+    depends_on:
+      - redis
+      - auth
+      - scoring-api

@@ -3,10 +3,8 @@ import pickle
 import numpy as np
 
 from sklearn.compose import ColumnTransformer
-from sklearn.preprocessing import OneHotEncoder, StandardScaler
+from sklearn.preprocessing import StandardScaler
 from sklearn.preprocessing import OrdinalEncoder
-
-
 
 
 def load_and_prune_data(file_path: str) -> pd.DataFrame:
@@ -30,9 +28,9 @@ def load_and_prune_data(file_path: str) -> pd.DataFrame:
     df["code_departement"] = df["code_departement"].astype(str)
     df["type_local"] = df["type_local"].astype(str)
 
-    df["price_per_sqm"] = df["valeur_fonciere"] / df["surface_reelle_bati"]
-
-    df = df.dropna(subset=keep)
+    df = df.dropna(subset=numeric_cols)
+    df = df[df["code_departement"] != "nan"]
+    df = df[df["type_local"] != "nan"]
 
     return df
 
@@ -43,17 +41,16 @@ def preprocess_data(df):
     - separate features and target
     - set up the preprocessor for categorical and numerical features
     """
-
     df = df[df["valeur_fonciere"] < df["valeur_fonciere"].quantile(0.90)] #remove outliers
     #NOTE : focus on maison and appartement is made to remove more "exotic" data
     #and thus improve MSE score
-    df = df[df["type_local"].isin(["Maison", "Appartement"])] 
-    
+    df = df[df["type_local"].isin(["Maison", "Appartement"])]
+
     X = df.drop("valeur_fonciere", axis=1) #features
     y = np.log1p(df["valeur_fonciere"]) #target
 
     #handling for categorical and numerical features
-    numeric_features = ["surface_reelle_bati", "nombre_pieces_principales", "nombre_lots", "surface_terrain", "price_per_sqm"]
+    numeric_features = ["surface_reelle_bati", "nombre_pieces_principales", "nombre_lots", "surface_terrain"]
     categorical_features = ["code_departement", "type_local"]
 
     preprocessor = ColumnTransformer(

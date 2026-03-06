@@ -1,6 +1,5 @@
 fastapi[standard]
 pydantic
-pandas
-numpy
-scikit-learn==1.6.1
+httpx
+redis
 python-multipart

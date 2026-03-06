@@ -1,18 +1,13 @@
 #Here is the logic for training the model that will be loaded in the scoring service
 
-import json
-import pandas as pd
-from datetime import datetime
 import handlers
 import os
 import numpy as np
 
 from sklearn.ensemble import HistGradientBoostingRegressor
-from sklearn.ensemble import GradientBoostingRegressor
 from sklearn.pipeline import Pipeline
-from sklearn.model_selection import train_test_split
+from sklearn.model_selection import train_test_split, cross_val_score
 from sklearn.metrics import mean_squared_error
-from sklearn.model_selection import cross_val_score
 
 
 def train_model(path_df: str, path_model: str) -> Pipeline:
@@ -23,7 +18,9 @@ def train_model(path_df: str, path_model: str) -> Pipeline:
     print(os.path.abspath(path_model))
     #preprocessing
     df = handlers.load_and_prune_data(path_df)
-    X,y, preprocessor = handlers.preprocess_data(df)
+    X, y, preprocessor = handlers.preprocess_data(df)
+    print(f"After load: {len(df)}, after preprocess: {len(X)}")
+    print(f"y mean: {y.mean():.4f}, y std: {y.std():.4f}")
 
     #train test
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
@@ -31,7 +28,7 @@ def train_model(path_df: str, path_model: str) -> Pipeline:
         steps=[
             ("preprocessor", preprocessor),
             (
-                "regressor", 
+                "regressor",
                 HistGradientBoostingRegressor(max_iter=1000, max_depth=8, learning_rate=0.02, random_state=42)
             ),
         ]
@@ -52,4 +49,3 @@ def train_model(path_df: str, path_model: str) -> Pipeline:
     #saving
     handlers.save_model(model, path_model)
     return model
-
