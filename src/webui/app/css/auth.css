@@ -7,7 +7,7 @@ body {
 }
 
 html{
-  background-image: url('./app_background.jpg');
+  background-image: url('../assets/app_background.jpg');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
