@@ -12,6 +12,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 
 app = FastAPI(title="Auth Service")
+#CORS for browser
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["http://localhost:3000"],
@@ -19,10 +20,14 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-SECRET_KEY = os.getenv("JWT_SECRET", "changeme_in_production")
+#if env file is found we get the secret key inside, else notify user
+SECRET_KEY = os.getenv("JWT_SECRET")
+if not SECRET_KEY:
+    raise RuntimeError("JWT_SECRET environment variable is not set.")
 TOKEN_EXPIRY_HOURS = 24
 
-r = redis.Redis(host=os.getenv("REDIS_HOST", "redis"), port=6379, decode_responses=True)
+#auth has its own redis db file
+r = redis.Redis(host=os.getenv("REDIS_HOST", "redis-auth"), port=6379, decode_responses=True)
 security = HTTPBearer()
 
 
@@ -30,6 +35,7 @@ class UserCredentials(BaseModel):
     username: str
     password: str
 
+# register and login/logout part
 
 @app.post("/register")
 def register(credentials: UserCredentials):
@@ -62,8 +68,9 @@ def logout(credentials: HTTPAuthorizationCredentials = Depends(security)):
     r.delete(f"session:{token}")
     return {"message": "Logged out successfully."}
 
+# -----
 
-@app.get("/validate")
+@app.get("/validate") #validates token
 def validate(credentials: HTTPAuthorizationCredentials = Depends(security)):
     token = credentials.credentials
     username = r.get(f"session:{token}")

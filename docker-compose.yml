@@ -1,20 +1,31 @@
 services:
-  redis:
+  redis-auth:
     image: redis:7-alpine
-    container_name: redis
-    ports:
-      - "6379:6379"
+    container_name: redis-auth
+    volumes:
+      - ./redis/redis.conf:/usr/local/etc/redis/redis.conf
+      - redis-auth-data:/data
+    command: redis-server /usr/local/etc/redis/redis.conf
+
+  redis-history:
+    image: redis:7-alpine
+    container_name: redis-history
+    volumes:
+      - ./redis/redis.conf:/usr/local/etc/redis/redis.conf
+      - redis-history-data:/data
+    command: redis-server /usr/local/etc/redis/redis.conf
 
   auth:
     build: ./src/auth
     container_name: auth
     ports:
       - "8001:8001"
+    env_file:
+      - .env
     environment:
-      - REDIS_HOST=redis
-      - JWT_SECRET=changeme_in_production
+      - REDIS_HOST=redis-auth
     depends_on:
-      - redis
+      - redis-auth
 
   scoring-api:
     build: ./src/scoring
@@ -30,13 +41,13 @@ services:
     ports:
       - "8002:8002"
     environment:
-      - REDIS_HOST=redis
       - AUTH_SERVICE_URL=http://auth:8001
       - SCORING_SERVICE_URL=http://scoring-api:8000
+      - HISTORY_SERVICE_URL=http://history:8003
     depends_on:
-      - redis
       - auth
       - scoring-api
+      - history
 
   webui:
     build: ./src/webui
@@ -46,3 +57,17 @@ services:
     depends_on:
       - gateway
       - auth
+
+  history:
+    build: ./src/history
+    container_name: history
+    ports:
+      - "8003:8003"
+    environment:
+      - REDIS_HOST=redis-history
+    depends_on:
+      - redis-history
+
+volumes:
+  redis-auth-data:
+  redis-history-data:

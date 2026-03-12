@@ -1,10 +1,11 @@
 from fastapi import FastAPI, HTTPException, Depends, UploadFile, File, Request
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
+from fastapi.middleware.cors import CORSMiddleware
 import httpx
 import os
-from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI(title="Gateway")
+#CORS otherwise we get blocked by the browser security policy
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["http://localhost:3000"],
@@ -12,12 +13,11 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+#adresses to services
 AUTH_SERVICE = os.getenv("AUTH_SERVICE_URL", "http://auth:8001")
 SCORING_SERVICE = os.getenv("SCORING_SERVICE_URL", "http://scoring-api:8000")
-security = HTTPBearer()
-
-
-
+HISTORY_SERVICE = os.getenv("HISTORY_SERVICE_URL", "http://history:8003")
+security = HTTPBearer() #services communicate through http
 
 
 async def require_auth(credentials: HTTPAuthorizationCredentials = Depends(security)):
@@ -38,14 +38,19 @@ async def score(request: Request, username: str = Depends(require_auth)):
     async with httpx.AsyncClient() as client:
         resp = await client.post(f"{SCORING_SERVICE}/score", json=body)
     result = resp.json()
-    _save_to_history(username, result, body)
+    async with httpx.AsyncClient() as client:
+        await client.post(f"{HISTORY_SERVICE}/estimates", json={
+            "username": username,
+            "input": body,
+            "result": result
+        })
     return result
 
 
 @app.post("/score/batch")
 async def score_batch(file: UploadFile = File(...), username: str = Depends(require_auth)):
     contents = await file.read()
-    async with httpx.AsyncClient() as client:
+    async with httpx.AsyncClient(timeout=120.0) as client:
         resp = await client.post(
             f"{SCORING_SERVICE}/score/batch",
             files={"file": (file.filename, contents, "text/csv")}
@@ -53,20 +58,18 @@ async def score_batch(file: UploadFile = File(...), username: str = Depends(requ
     return resp.json()
 
 
+#User estimates history handling
 @app.get("/history")
 async def history(username: str = Depends(require_auth)):
-    import redis
-    import json
-    r = redis.Redis(host=os.getenv("REDIS_HOST", "redis"), port=6379, decode_responses=True)
-    entries = r.lrange(f"history:{username}", 0, 49)
-    return {"history": [json.loads(e) for e in entries]}
+    async with httpx.AsyncClient() as client:
+        resp = await client.get(f"{HISTORY_SERVICE}/estimates/{username}")
+    return resp.json()
 
 
-def _save_to_history(username: str, result: dict, input_data: dict):
-    import redis
-    import json
-    from datetime import datetime
-    r = redis.Redis(host=os.getenv("REDIS_HOST", "redis"), port=6379, decode_responses=True)
-    entry = json.dumps({"input": input_data, "result": result, "timestamp": datetime.utcnow().isoformat()})
-    r.lpush(f"history:{username}", entry)
-    r.ltrim(f"history:{username}", 0, 49)
+@app.get("/history/{estimate_id}")
+async def get_estimate(estimate_id: str, username: str = Depends(require_auth)):
+    async with httpx.AsyncClient() as client:
+        resp = await client.get(f"{HISTORY_SERVICE}/estimates/{username}/{estimate_id}")
+    if resp.status_code == 404:
+        raise HTTPException(status_code=404, detail="Estimate not found.")
+    return resp.json()

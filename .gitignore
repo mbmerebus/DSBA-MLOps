@@ -52,8 +52,8 @@ env/
 ENV/
 
 #FastAPI/Environment Variables
-
-.env
+#uncomment .env if in true prod
+#.env 
 .env.local
 .env.*.local
 
