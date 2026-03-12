@@ -3,14 +3,11 @@ body {
   align-items: center;
   justify-content: center;
   min-height: 100vh;
-
-}
-
-html{
   background-image: url('../assets/app_background.jpg');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
+
 }
 
 .auth-container {
