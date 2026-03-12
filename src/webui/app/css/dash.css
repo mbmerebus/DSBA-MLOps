@@ -1,10 +1,21 @@
+@import url('https://fonts.googleapis.com/css2?family=Arapey:ital@0;1&display=swap');
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: inherit;
+  filter: blur(6px);
+  z-index: -1;
+}
+
 nav {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 14px 28px;
   background: white;
-  border-bottom: 1px solid #eee;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.5);
 }
 
 main {
@@ -17,33 +28,65 @@ main {
 }
 
 .card {
-  background: white;
-  border-radius: 10px;
+  background: rgb(255, 253, 249);
+  border-radius: 6px;
   padding: 24px;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.5);
 }
-.card h2 { font-size: 1rem; margin-bottom: 16px; padding-bottom: 10px; border-bottom: 1px solid #eee; }
-.full-width { grid-column: 1 / -1; }
+.card h2 { 
+  margin-bottom: 16px; 
+  padding-bottom: 10px; 
+  border-bottom: 1px solid #eee; 
+}
 
-.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.full-width { 
+  grid-column: 1 / -1; 
+}
 
-.result { margin-top: 16px; padding: 16px; background: #f5f5f5; border-radius: 8px; text-align: center; }
-.result-price { font-size: 1.8rem; font-weight: 700; }
-.result-ci { font-size: 0.82rem; color: #888; margin-top: 4px; }
+.form-grid { 
+  display: grid; 
+  grid-template-columns: 1fr 1fr; 
+  gap: 10px; 
+}
+
+.result { 
+  margin-top: 16px; 
+  padding: 16px; 
+  background: #f5f5f5; 
+  border-radius: 3px; 
+  text-align: center; 
+}
+
+.result-price { 
+  font-size: 1.8rem; 
+  font-weight: 700; 
+}
+
+.result-ci { 
+  font-size: 0.82rem; 
+  color: #888; 
+  margin-top: 4px; 
+}
 
 
 /*UPLOAD*/
 
 .upload-area {
   border: 2px dashed #ddd;
-  border-radius: 8px;
+  border-radius: 3px;
   padding: 28px;
   text-align: center;
   cursor: pointer;
   color: #888;
 }
-.upload-area:hover { border-color: #222; color: #222; }
-.upload-area input { display: none; }
+.upload-area:hover { 
+  border-color: #222; 
+  color: #222; 
+}
+
+.upload-area input { 
+  display: none; 
+}
 
 /*HISTORY*/
 
@@ -51,7 +94,7 @@ main {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 10px 0;
+  padding: 10px 2px;
   border-bottom: 1px solid #f0f0f0;
   font-size: 0.88rem;
   transition: 0.3s;
@@ -69,10 +112,28 @@ main {
 
 
 
-.hist-price { font-weight: 700; margin-right: 10px; }
-.hist-meta { color: #888; }
-.hist-date { color: #bbb; font-size: 0.78rem; margin-left: 6px; }
-.hist-ci { color: #aaa; font-size: 0.8rem; }
+.hist-price { 
+  margin-right: 10px; 
+  font-family: "Arapey", serif;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 1.1rem;
+}
+
+.hist-meta { 
+  color: #888; 
+}
+
+.hist-date { 
+  color: #bbb; 
+  font-size: 0.78rem; 
+  margin-left: 6px; 
+}
+
+.hist-ci { 
+  color: #aaa; 
+  font-size: 0.8rem; 
+}
 
 .batch-item {
   display: flex;
@@ -81,4 +142,9 @@ main {
   border-bottom: 1px solid #f0f0f0;
   font-size: 0.88rem;
 }
-.batch-count { font-size: 0.85rem; color: #666; margin-bottom: 10px; }
+
+.batch-count { 
+  font-size: 0.85rem; 
+  color: #666; 
+  margin-bottom: 10px; 
+}
