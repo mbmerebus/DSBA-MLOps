@@ -16,6 +16,7 @@ def train_model(path_df: str, path_model: str) -> Pipeline:
     Model used is HistGradient Boosting Regressor from sklearn.
     """
     print(os.path.abspath(path_model))
+
     #preprocessing
     df = handlers.load_and_prune_data(path_df)
     X, y, preprocessor = handlers.preprocess_data(df)
@@ -38,9 +39,11 @@ def train_model(path_df: str, path_model: str) -> Pipeline:
     #eval
     y_pred = np.expm1(model.predict(X_test))
     y_test_actual = np.expm1(y_test)
+
     ##MSE
     mse = mean_squared_error(y_test_actual, y_pred)
     print(f"Mean Squared Error: {mse}")
+    
     ##RMSE
     scores = cross_val_score(model, X, y, cv=5, scoring="neg_mean_squared_error")
     rmse_log = np.sqrt(-scores.mean())

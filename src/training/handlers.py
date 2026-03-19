@@ -1,6 +1,7 @@
 import pandas as pd
 import pickle
 import numpy as np
+import os
 
 from sklearn.compose import ColumnTransformer
 from sklearn.preprocessing import StandardScaler
@@ -19,7 +20,7 @@ def load_and_prune_data(file_path: str) -> pd.DataFrame:
         "surface_terrain"
     ]
 
-    df = pd.read_csv(file_path, usecols=keep, low_memory=False)   # pandas will ignore missing cols
+    df = pd.read_csv(file_path, usecols=keep, low_memory=False)   # ignore unspecified cols
 
     numeric_cols = ["surface_reelle_bati", "nombre_pieces_principales", "valeur_fonciere", "nombre_lots", "surface_terrain"]
     for col in numeric_cols:
@@ -50,7 +51,13 @@ def preprocess_data(df):
     y = np.log1p(df["valeur_fonciere"]) #target
 
     #handling for categorical and numerical features
-    numeric_features = ["surface_reelle_bati", "nombre_pieces_principales", "nombre_lots", "surface_terrain"]
+    numeric_features = [
+        "surface_reelle_bati",
+        "nombre_pieces_principales",
+        "nombre_lots",
+        "surface_terrain"
+    ]
+    
     categorical_features = ["code_departement", "type_local"]
 
     preprocessor = ColumnTransformer(
@@ -61,11 +68,12 @@ def preprocess_data(df):
     )
     return X, y, preprocessor
 
-
+#NOTE: the model is saved in the scoring API folder, and later loaded into the scoring service container.
 def save_model(model, path_model: str):
     """Save the trained model to a file"""
-    import os
+
     dir_name = os.path.dirname(path_model)
+
     if dir_name:
         os.makedirs(dir_name, exist_ok=True)
     with open(path_model, "wb") as f:
