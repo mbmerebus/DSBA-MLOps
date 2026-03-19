@@ -48,6 +48,7 @@ async def score(request: Request, username: str = Depends(require_auth)):
 
 
 @app.post("/score/batch")
+#NOTE: opens a file search window
 async def score_batch(file: UploadFile = File(...), username: str = Depends(require_auth)):
     contents = await file.read()
     async with httpx.AsyncClient(timeout=120.0) as client:

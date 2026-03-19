@@ -20,6 +20,10 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+class UserCredentials(BaseModel):
+    username: str
+    password: str
+
 #if env file is found we get the secret key inside, else notify user
 SECRET_KEY = os.getenv("JWT_SECRET")
 if not SECRET_KEY:
@@ -31,12 +35,9 @@ r = redis.Redis(host=os.getenv("REDIS_HOST", "redis-auth"), port=6379, decode_re
 security = HTTPBearer()
 
 
-class UserCredentials(BaseModel):
-    username: str
-    password: str
+
 
 # register and login/logout part
-
 @app.post("/register")
 def register(credentials: UserCredentials):
     if r.exists(f"user:{credentials.username}"):
@@ -68,9 +69,7 @@ def logout(credentials: HTTPAuthorizationCredentials = Depends(security)):
     r.delete(f"session:{token}")
     return {"message": "Logged out successfully."}
 
-# -----
-
-@app.get("/validate") #validates token
+@app.get("/validate")
 def validate(credentials: HTTPAuthorizationCredentials = Depends(security)):
     token = credentials.credentials
     username = r.get(f"session:{token}")
