@@ -3,32 +3,29 @@
 This repository was made for DSBA MLOps class.\
 **Author**: Matteo COUCHOUD
 
+## Functionalities
+
+
+
 ## Structure
-unrelated_assets (assets not related to assignments)\
-coreAPI (code for the API project and docker image)\
-images (built docker images)
 
-API is listening on ports `8000`and `8080`.
+## How to build the app
 
-## Quick commands
+Before running anything in the app, you must train the prediction model.
+1. Training data can be found at this link: [https://explore.data.gouv.fr/fr/immobilier](https://explore.data.gouv.fr/fr/immobilier). Download the `.csv` file (whole country).
 
-### Docker Compose
+From the root of the project, put the `.csv` file in the `inputs` folder.
 
-- Build and launch image using the .yaml conf file:\
-`docker compose up -d`
+Now, with a terminal at the root of the project:
 
-- Power down image:\
-`docker compose down`
+2. Run the training command: ``
+3. Build the whole application: ``
+4. Connect to the app at `localhost:3000/auth.html`
 
-### Docker build
-- Build docker Scoring-API:\
-`docker build -t socring-api`
+The app can be stopped through the Docker Desktop interface (`dsba-mlops` container), or run:
 
-- Save docker image as .tar file _(version to specify)_:\
-`docker save scoring-api:<VERSION> -o scoring-api.tar`
+- ``
 
-- Load .tar image file:\
-`docker load -i scoring-api.tar`
 
 
 
