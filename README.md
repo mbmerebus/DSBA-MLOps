@@ -1,7 +1,11 @@
-![banner](./unrelated_assests/img/MLOps_github_banner.png)
+![banner](documentation/unrelated_assests/img/MLOps_github_banner.png)
 # DSBA-MLOps Repository
 This repository was made for DSBA MLOps class.\
 **Author**: Matteo COUCHOUD
+
+## Description
+
+## Context
 
 ## Functionalities
 
@@ -16,22 +20,12 @@ The app supports the following functionalities:
 >_The prediction model is a `HistGradientBoostingRegressor` trained on French real estate transaction data (DVF). It can be retrained using the training CLI._
 
 
-## Structure
-The project follows a multi-service architecture:
-```
-DSBA-MLOps
-├── inputs --input data folder
-│   └── (data csv file here)
-├── redis --redis configuration
-├── src --source code for all API/services
-│   ├── training --training CLI and code for the prediction model
-│   ├── scoring --property scoring service using trained model
-│   ├── auth --user authentication service
-│   ├── history --scoring history, specific to the user
-│   ├── gateway --request routing service and single entry point
-│   └── webui --frontend service (nginx)
-└── docker-compose.yml
-```
+## Read further - Documentation
+The following pages gove more details on inner works of the product and reasoning behind technical choices:
+- [Detailed functionnalities](documentation/product.md)
+- [Architecture](documentation/architecture.md)
+- [Machine Learning and Property Scoring](documentation/scoring.md)
+- [Authentication and security](documentation/security.md)
 
 ## How to build the app
 
@@ -48,12 +42,7 @@ Now, with a terminal at **the root of the project**:
 
 The app can be stopped through the Docker Desktop interface (`dsba-mlops` container), or by running `docker-compose down` from the root of the project.
 
-## Tested
-This code has been tested and works on the following operating systems:
-- Linux (Ubuntu, Fedora)
-- MacOS 26 (Tahoe)
-
-_The code hasn't been tested on Windows yet, but should work._
+## Limitations
 
 
 
