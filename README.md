@@ -42,7 +42,7 @@ _Data for Alsace and Moselle are not available. As such, estimates of those two 
 The following pages gove more details on inner works of the product and reasoning behind technical choices:
 - [Detailed functionnalities](documentation/product.md)
 - [Architecture](documentation/architecture.md)
-- [Machine Learning and Property Scoring](documentation/scoring.md)
+- [Machine Learning for Property Scoring](documentation/scoring.md)
 - [Authentication and security](documentation/security.md)
 
 ## V. How to build the app
@@ -67,7 +67,7 @@ Functionnalities:
 - **Geographic coverage**: the model is trained on French DVF data and is only relevant for properties located in France. Also, Alsace and Moselle are currently not available in the dataset and will not have estimate in the tool.
 
 Developpement:
-- **CORS configuration**: the current setup contains code that works on a local environment (such as CORS policy ) but has not been validated for production. A security review would be required before any public deployment. For more information on CORS, see the [Authentication and Security](documentation/security.md) page.
+- **CORS configuration**: the current setup contains code that works on a local environment (such as CORS policy) but has not been validated for production. A security review would be required before any public deployment. For more information on CORS, see the [Authentication and Security](documentation/security.md) page.
 - **Docker images & model file**: for a production context, Docker images should be stored on a dedicated registry like DockerHub and the model file on an object storage service. Both are included in this repository for convenience during development.
 
 
