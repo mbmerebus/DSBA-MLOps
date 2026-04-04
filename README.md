@@ -65,6 +65,8 @@ The following pages gove more details on inner works of the product and reasonin
 
 ## How to build the app
 
+**Prerequisite: You need Docker working on the machine.**
+
 Before running anything in the app, you must train the prediction model.
 1. Training data can be found at this link: [https://www.data.gouv.fr/datasets/demandes-de-valeurs-foncieres-geolocalisees](https://www.data.gouv.fr/datasets/demandes-de-valeurs-foncieres-geolocalisees). Download the `.csv` file (_csv/2025/full.csv.gz_).
 
@@ -72,11 +74,17 @@ From the root of the project, put the `.csv` file in the `inputs` folder.
 
 Now, with a terminal at **the root of the project**:
 
-2. Run the training command: `python src/training/cli.py --data inputs/full.csv`
-3. Build the whole application: `docker-compose up --build` (or `docker-compose down && docker-compose up --build` if the app is already running).
-4. Connect to the app at `localhost:3000/auth.html`
+2. Generate the `.env` file with secure secrets: `python cli.py generate-env`
+3. Run the training command: `python cli.py train --data inputs/full.csv`
+4. Build and start the whole application: `python cli.py start`
+5. Connect to the app at `localhost:3000/auth.html`
 
-The app can be stopped through the Docker Desktop interface (`dsba-mlops` container), or by running `docker-compose down` from the root of the project.
+The app can be stopped with `python cli.py stop`, or by stopping individual services with
+`python cli.py stop-service <service-name>`. A specific service can be rebuilt and restarted
+with `python cli.py restart <service-name>`.
+
+Available service names: `auth`, `gateway`, `history`, `scoring-api`, `webui`,
+`redis-auth`, `redis-history`
 
 ## Current limitations
 

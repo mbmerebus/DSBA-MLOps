@@ -8,15 +8,13 @@ Other pages:
 - [Authentication and security](security.md)
 
 ## Content
-The goal is to predict the declared value (valeur foncière) of a French property given a set
-of descriptive attributes.
+The goal is to predict the declared value (valeur foncière) of a French property given a setof descriptive attributes.
 
-This is a supervised regression problem where given  a set of inputs describing
-a property, the model outputs an estimated value in euros.
+This is a supervised regression problem where given  a set of inputs describing a property, the model outputs an estimated value in euros.
 
-The model is trained on the DVF dataset (Demandes de Valeurs Foncières), published by the
-DGFIP and the Ministry of Economy, Finance and Industry, which covers all declared property
-values across metropolitan France and DOM TOM, except Alsace and Moselle
+The model is trained on the DVF dataset (Demandes de Valeurs Foncières), published by the DGFIP and the Ministry of Economy, Finance and Industry, which covers all declared property values across metropolitan France and DOM TOM, except Alsace and Moselle. 
+
+The dataset can be downloaded as a CSV file [here](https://www.data.gouv.fr/datasets/demandes-de-valeurs-foncieres-geolocalisees). Download the `.csv` file (_csv/YEAR/full.csv.gz_). The closest year record should be chosen so estimates are more inline with current property valuation.
 
 ### The data
 
@@ -44,7 +42,7 @@ A few key data decisions worth noting:
 The too implements a **HistGradientBoostingRegressor** (from __scikit-learn__) for the following reasons:
 
 1. **Gradient boosting** is known to perform well on structured tabular data with mixed features types (dates, ids, prices, names...)
-2. the histogram-based variant is significantly faster than classic gradient boosting, making retraining practical on the full yearly dataset
+2. the histogram-based variant is significantly faster than classic gradient boosting, making retraining practical on the extensive full-France dataset
 
 On training results:
 Lauching the training CLI gives the following output in the terminal:

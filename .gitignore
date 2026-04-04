@@ -4,6 +4,8 @@
 .AppleDouble
 .LSOverride
 
+
+
 #Windows
 Thumbs.db
 ehthumbs.db
@@ -52,8 +54,7 @@ env/
 ENV/
 
 #FastAPI/Environment Variables
-#uncomment .env if in true prod
-#.env 
+.env 
 .env.local
 .env.*.local
 

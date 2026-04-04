@@ -32,7 +32,7 @@ First of all, in our case a microservice architecture shows benefits:
 **Identified limitations of microservices:**
 This architecture creates complexity that may not be justified for a small internal tool. Managing multiple services, multiple databases, and between-service communication requires more infrastructure "discipline" than a "one does it all" application. In a production context this complexity can be mitigated by using a container orchestration software like Kubernetes.
 
-**Previous knowledge**: I have worked on some other projects involving the use of redis and microservices in a web context. Thus this prior knowledge is being leveraged for a similar web-based service delivery context.
+**Previous knowledge**: I(/the team) have worked on some other projects involving the use of redis and microservices in a web context. Thus this prior knowledge is being leveraged for a similar web-based service delivery context.
 
 ### Map of all services
 
@@ -61,7 +61,7 @@ Redis has some nice qualities:
 - **Built-in expiry**: Redis natively supports key expiration, which we use to automatically invalidate user sessions after 24 hours without any additional logic (again time and complexity).
 
 **Why two separate instances:**
-Sharing a single Redis instance between services would violate the core microservices principle that each service owns its data. If auth and history share a datastorage, a bug or format change in one service can corrupt data used by the other. Two instances provide true isolation at an infrastructure level.
+Sharing a single Redis instance between services would violate the core microservices principle that each service owns its data. If auth and history share a datastorage, a bug or format change in one service can corrupt data used by the other. Two instances provide true isolation.
 
 **Persistence:**
 Both Redis instances are configured with persistence enabled, which means user accounts and estimate history are stored in a file and will survive tool restarts and rebuilds.

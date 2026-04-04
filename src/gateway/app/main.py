@@ -5,7 +5,16 @@ import httpx
 import os
 
 app = FastAPI(title="Gateway")
-#CORS otherwise we get blocked by the browser security policy
+
+# CORS POLICY — DEVELOPMENT ONLY
+# Cross-Origin Resource Sharing (CORS) controls which domains are allowed to make
+# requests to this API.
+# (allow_origins=["*"]) is intentionally permissive to allow the frontend to communicate
+#  with the backend during local development.
+#
+# WARNING: This must not be used in production. In a production environment, this should
+# be restricted to the specific domain serving the frontend, and validated by a security
+# expert before any deployment.
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["http://localhost:3000"],

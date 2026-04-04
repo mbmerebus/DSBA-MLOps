@@ -8,7 +8,17 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
 app = FastAPI(title="History Service")
-#CORS
+
+
+# CORS POLICY — DEVELOPMENT ONLY
+# Cross-Origin Resource Sharing (CORS) controls which domains are allowed to make
+# requests to this API.
+# (allow_origins=["*"]) is intentionally permissive to allow the frontend to communicate
+#  with the backend during local development.
+#
+# WARNING: This must not be used in production. In a production environment, this should
+# be restricted to the specific domain serving the frontend, and validated by a security
+# expert before any deployment.
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
