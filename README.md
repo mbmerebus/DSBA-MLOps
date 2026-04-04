@@ -9,7 +9,7 @@ Estimating the market value of a property in France is complex time-consuming, a
 
 ## Reasoning
 
-Whether you are buying, selling, or simply assessing your assets, knowing the fair market value of a property is an important data to have. In France, this data is publicly available through the DVF dataset (Demandes de Valeurs Foncières) published by the DGFIP and the Ministry of Economy, Finance and Industry. It covers the entirety of French territory (except Alsace) and records the declared property values submitted to tax authorities in a year.
+Whether you are buying, selling, or simply assessing your assets, knowing the fair market value of a property is an important data to have. In France, this data is publicly available through the DVF dataset (Demandes de Valeurs Foncières) published by the DGFIP and the Ministry of Economy, Finance and Industry. It covers the entirety of French territory (except Alsace and Moselle) and records the declared property values submitted to tax authorities in a year.
 
 However, this dataset is quite technical, extensive and as such less accessible for non-specialist.
 
@@ -88,6 +88,10 @@ Developpement:
 - **CORS configuration**: the current setup contains code that works on a local environment (such as CORS policy) but has not been validated for production. A security review would be required before any public deployment. For more information on CORS, see the [Authentication and Security](documentation/security.md) page.
 - **Docker images & model file**: for a production context, Docker images should be stored on a dedicated registry like DockerHub and the model file on an object storage service. Both are included in this repository for convenience during development.
 
+## Future implementation ideas
+While the tool successfuly implements the key features metionned earlier, it can still be made better. Here are some ideas:
+
+- [Estimates]: Implement a true confidence interval system. A statistically rigorous one would require a more complex approach like quantile regression.
 
 
 
