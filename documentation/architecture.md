@@ -7,17 +7,15 @@ Other pages:
 - [Machine Learning for Property Scoring](scoring.md)
 - [Authentication and security](security.md)
 
-## Content
-
-### Overview
+## Overview
 
 The application is built as a set of independent services, each responsible for a single
-concern.
+concern/function.
 
-![architecture scheme](doc_images/architecture_scheme.png)
+The following documentation aims to explain why Microservices are coherent in this tool's case and how this architecture is implemented.
 
----
 
+## Microservice Architecture
 ### Why a Microservices Architecture ?
 
 The application was designed as a microservices architecture rather than a single monolithic
@@ -48,9 +46,10 @@ Functionnaly, the services are the following:
 | `redis-auth` | User and session storage (owned by auth service) |
 | `redis-history` | Estimate storage (history by user) |
 
----
+Their interactions are better explained by a schema:
+![architecture scheme](doc_images/architecture_scheme.png)
 
-### Using Redis as database / datastorage
+## Using Redis as database / datastorage
 
 Redis is used as the persistent database for two services. Those databases are separated by concerns as implied by the microservice architecture.
 
@@ -65,3 +64,11 @@ Sharing a single Redis instance between services would violate the core microser
 
 **Persistence:**
 Both Redis instances are configured with persistence enabled, which means user accounts and estimate history are stored in a file and will survive tool restarts and rebuilds.
+
+## Logging
+Each service implements a loggin system to help for debugging and explainability. The python file implementing the logging pipeline is in each of the services folder as per microservice principle of separation of concerns. That way, logging can be tailored differently for each service.
+
+Logs are accessible by running  the following commands in the terminal:
+- `python cli.py logs` for logs from all services
+- `python cli.py logs auth` for example to see logs from auth only
+- `python cli.py logs scoring-api` for example to see logs from scoring-api only

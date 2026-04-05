@@ -4,6 +4,9 @@ from fastapi.middleware.cors import CORSMiddleware
 import httpx
 import os
 
+from logger import get_logger
+logger = get_logger("gateway")
+
 app = FastAPI(title="Gateway")
 
 # CORS POLICY — DEVELOPMENT ONLY
@@ -38,18 +41,25 @@ async def require_auth(credentials: HTTPAuthorizationCredentials = Depends(secur
             headers={"Authorization": f"Bearer {token}"}
         )
     if resp.status_code != 200:
+        logger.warning("Invalid or expired token attempt")
         raise HTTPException(status_code=401, detail="Invalid or expired token.")
     return resp.json()["username"]
 
 
 @app.post("/score")
 async def score(request: Request, username: str = Depends(require_auth)):
+    
     body = await request.json()
     async with httpx.AsyncClient() as client:
+        logger.info("Score request for user: %s", username)
         resp = await client.post(f"{SCORING_SERVICE}/score", json=body)
+
     if resp.status_code != 200:
+        logger.error("Scoring service error for user %s: %s", username, resp.status_code)
         raise HTTPException(status_code=resp.status_code, detail=resp.json())
+    
     result = resp.json()
+
     async with httpx.AsyncClient() as client:
         await client.post(f"{HISTORY_SERVICE}/estimates", json={
             "username": username,
@@ -64,6 +74,7 @@ async def score(request: Request, username: str = Depends(require_auth)):
 async def score_batch(file: UploadFile = File(...), username: str = Depends(require_auth)):
     contents = await file.read()
     async with httpx.AsyncClient(timeout=120.0) as client:
+        logger.info("Batch score request for user: %s", username)
         resp = await client.post(
             f"{SCORING_SERVICE}/score/batch",
             files={"file": (file.filename, contents, "text/csv")}
@@ -73,6 +84,7 @@ async def score_batch(file: UploadFile = File(...), username: str = Depends(requ
 @app.get("/history")
 async def history(username: str = Depends(require_auth)):
     async with httpx.AsyncClient() as client:
+        logger.info("History request for user: %s", username)
         resp = await client.get(f"{HISTORY_SERVICE}/estimates/{username}")
     return resp.json()
 
@@ -80,7 +92,9 @@ async def history(username: str = Depends(require_auth)):
 @app.get("/history/{estimate_id}")
 async def get_estimate(estimate_id: str, username: str = Depends(require_auth)):
     async with httpx.AsyncClient() as client:
+        logger.info("Specific history loading request by user: %s", username)
         resp = await client.get(f"{HISTORY_SERVICE}/estimates/{username}/{estimate_id}")
     if resp.status_code == 404:
+        logger.error("Specific estimate not found for user %s: %s", username, resp.status_code)
         raise HTTPException(status_code=404, detail="Estimate not found.")
     return resp.json()

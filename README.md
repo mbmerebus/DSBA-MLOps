@@ -67,6 +67,11 @@ with `python cli.py restart <service-name>`.
 Available service names: `auth`, `gateway`, `history`, `scoring-api`, `webui`,
 `redis-auth`, `redis-history`
 
+Logs are accessible by running  the following commands in the terminal:
+- `python cli.py logs` for logs from all services
+- `python cli.py logs auth` for example to see logs from auth only
+- `python cli.py logs scoring-api` for example to see logs from scoring-api only
+
 ## Current limitations
 
 Functionnalities:
@@ -82,7 +87,7 @@ While the tool successfuly implements the key features metionned earlier, it can
 
 - [Estimates]: Implement a true confidence interval system. A statistically rigorous one would require a more complex approach like quantile regression.
 - [Estimates]: Improve scoring model performances so estimates are closer to reality/more reliable.
-- [Deployment]: Have Docker images stored on DockerHub or another service, and implement Kubernetes to deploy a complete microservice infrastructure (services not running in the same container/machine).
+- [Deployment]: Have Docker images stored on DockerHub or another service, and implement Kubernetes to deploy a complete microservice infrastructure (services not running in the same container/machine -> better resilience and scalability).
 - [Accessibility]: Add tooltips and better error messages to help the user navigate and use the different functions.
 
 

@@ -9,6 +9,9 @@ from pydantic import BaseModel
 from cryptography.fernet import Fernet
 import base64
 
+from logger import get_logger
+logger = get_logger("history")
+
 app = FastAPI(title="History Service")
 
 # CORS POLICY — DEVELOPMENT ONLY
@@ -49,6 +52,7 @@ class Estimate(BaseModel):
 @app.post("/estimates")
 def save_estimate(estimate: Estimate):
     estimate_id = str(uuid_lib.uuid4())
+    logger.info("Estimate saved for user: %s — id: %s", estimate.username, estimate_id)
 
     # Encrypt the estimate name before storage — it may contain sensitive information
     # such as a property address. A separate key from auth ensures that a breach of one
@@ -71,12 +75,13 @@ def save_estimate(estimate: Estimate):
     return {"id": estimate_id}
 
 
-def _decrypt_name(encrypted_name: str) -> str:
+def _decrypt_name(encrypted_name: str, username: str) -> str:
     # Decrypt the estimate name for display — only possible with the correct key
     if fernet and encrypted_name:
         try:
             return fernet.decrypt(encrypted_name.encode()).decode()
-        except Exception:
+        except Exception as e:
+            logger.warning("Failed to decrypt estimate name for user %s: %s", username, e)
             return ""
     return ""
 
@@ -89,8 +94,9 @@ def get_estimates(username: str):
         raw = r.get(f"estimate:{username}:{eid}")
         if raw:
             entry = json.loads(raw)
-            entry["estimate_name"] = _decrypt_name(entry.get("estimate_name", ""))
+            entry["estimate_name"] = _decrypt_name(entry.get("estimate_name", ""), username)
             estimates.append(entry)
+    logger.info("History fetched for user: %s — %d estimates returned", username, len(estimates))
     return {"history": estimates}
 
 
@@ -100,5 +106,5 @@ def get_estimate(username: str, estimate_id: str):
     if not raw:
         raise HTTPException(status_code=404, detail="Estimate not found.")
     entry = json.loads(raw)
-    entry["estimate_name"] = _decrypt_name(entry.get("estimate_name", ""))
+    entry["estimate_name"] = _decrypt_name(entry.get("estimate_name", ""), username)
     return entry

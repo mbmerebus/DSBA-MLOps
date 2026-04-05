@@ -106,6 +106,25 @@ def stop_service(service):
     subprocess.run(["docker-compose", "stop", service], cwd=BASE_DIR, check=True)
     print(f"{service} stopped.")
 
+# -- LOGGING --
+
+#NOTE: Logging commands in CLI to make it more accessible for a provider
+
+SERVICES = ["auth", "gateway", "history", "scoring-api", "webui", "redis-auth", "redis-history"]
+
+def logs(service=None):
+    """
+    Stream logs from all services or a specific one.
+    If no service is specified, logs from all services are streamed.
+    """
+    if service:
+        if service not in SERVICES:
+            print(f"Unknown service '{service}'. Available: {', '.join(SERVICES)}")
+            return
+        subprocess.run(["docker-compose", "logs", "-f", service], cwd=BASE_DIR)
+    else:
+        subprocess.run(["docker-compose", "logs", "-f"], cwd=BASE_DIR)
+
 # -- MAIN --
 
 def main():
@@ -133,6 +152,10 @@ def main():
     stop_service_parser = subparsers.add_parser("stop-service", help="Stop a specific service")
     stop_service_parser.add_argument("service", help="Service name (e.g. webui, gateway, auth, history, scoring-api)")
 
+    #Command: logs
+    logs_parser = subparsers.add_parser("logs", help="Stream logs from all services or a specific one")
+    logs_parser.add_argument("service", nargs="?", default=None, help=f"Service name. Available: {', '.join(SERVICES)}")
+
 
 
     args = parser.parse_args()
@@ -150,6 +173,8 @@ def main():
         start_service(args.service)
     elif args.command == "stop-service":
         stop_service(args.service)
+    elif args.command == "logs":
+        logs(args.service)
     else:
         parser.print_help()
 

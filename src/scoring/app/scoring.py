@@ -5,6 +5,9 @@ import pandas as pd
 from pathlib import Path
 from pydantic import BaseModel, Field
 
+from logger import get_logger
+logger = get_logger("scoring")
+
 #item classes
 
 #Property class to be sent for scoring / with input fields
@@ -29,7 +32,9 @@ def load_latest_model():
     models = sorted(MODEL_PATH.glob("model_*.pkl"))
 
     if not models:
+        logger.error("No model found at %s", MODEL_PATH)
         raise FileNotFoundError(f"No model found at {MODEL_PATH}")
+    logger.info("Model loaded: %s", models[-1].name)
     with open(models[-1], "rb") as f:
         return pickle.load(f)
     
@@ -57,6 +62,7 @@ def score(property: PropertyItem) -> dict:
     model = load_latest_model()
     df = handle_df(pd.DataFrame([property.model_dump()]))
     pred = np.expm1(model.predict(df)[0])
+    logger.info("Single property scored — predicted: %s", round(float(pred), 2))
     return {
         "predicted_price": round(float(pred), 2),
         "confidence_interval": { #for debug or feature 
@@ -73,6 +79,7 @@ def score_batch(df: pd.DataFrame) -> list:
     model = load_latest_model()
     df = handle_df(df)
     preds = np.expm1(model.predict(df))
+    logger.info("Batch scored — %d properties", len(preds))
 
     # NOTE The price range is computed as +/- 20% around the predicted value.
     # This is a simplification and not a statistically derived confidence interval

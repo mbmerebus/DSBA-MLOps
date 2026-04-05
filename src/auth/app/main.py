@@ -9,6 +9,9 @@ from datetime import datetime, timedelta
 import os
 from fastapi.middleware.cors import CORSMiddleware
 
+from logger import get_logger
+logger = get_logger("auth")
+
 
 
 app = FastAPI(title="Auth Service")
@@ -64,6 +67,7 @@ def register(credentials: UserCredentials):
     # it makes brute force attacks computationally expensive even with direct database access.
     hashed = bcrypt.hashpw(credentials.password.encode(), bcrypt.gensalt()).decode()
     r.set(f"user:{credentials.username}", hashed)
+    logger.info("New user registered: %s", credentials.username)
     return {"message": "User registered successfully."}
 
 
@@ -71,6 +75,7 @@ def register(credentials: UserCredentials):
 def login(credentials: UserCredentials):
     stored_hash = r.get(f"user:{credentials.username}")
     if not stored_hash or not bcrypt.checkpw(credentials.password.encode(), stored_hash.encode()): #hash decode
+        logger.warning("Failed login attempt for: %s", credentials.username)
         raise HTTPException(status_code=401, detail="Invalid credentials.")
     token = jwt.encode(
         {"sub": credentials.username, "exp": datetime.utcnow() + timedelta(hours=TOKEN_EXPIRY_HOURS)},
@@ -78,6 +83,7 @@ def login(credentials: UserCredentials):
         algorithm="HS256"
     )
     r.setex(f"session:{token}", timedelta(hours=TOKEN_EXPIRY_HOURS), credentials.username)
+    logger.info("Login successful: %s", credentials.username)
     return {"access_token": token, "token_type": "bearer"}
 
 
@@ -87,6 +93,7 @@ def logout(credentials: HTTPAuthorizationCredentials = Depends(security)):
     if not r.exists(f"session:{token}"):
         raise HTTPException(status_code=401, detail="Invalid or expired token.")
     r.delete(f"session:{token}")
+    logger.info(f"User logged out — session invalidated. Token {token}")
     return {"message": "Logged out successfully."}
 
 @app.get("/validate")
@@ -94,5 +101,7 @@ def validate(credentials: HTTPAuthorizationCredentials = Depends(security)):
     token = credentials.credentials
     username = r.get(f"session:{token}")
     if not username:
+        logger.warning("Invalid or expired token for: %s", username)
         raise HTTPException(status_code=401, detail="Invalid or expired token.")
+    logger.info("Valid token for: %s", username)
     return {"username": username}

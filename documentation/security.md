@@ -44,3 +44,5 @@ ___
 The JWT signing secret is loaded from an environment variable and NOT hardcoded in the source code. A `.env.example` file is provided to document the required variables without exposing their values. 
 
 The `.env` file is excluded from version control via `.gitignore` but created automatically by using the `python cli.py generate-env` command at the root of the directory. It will be already filled with the needed secrets so as to remove the pain point of knowing what a good secret is for the provider. This is standard practice, as some pretty well known tools like Django, Rails, and Laravel all generate secrets automatically on project initialization.
+
+HS256 encryption ensures JWT integrity. So any attempt to tamper with the token payload without knowing the secret key will result in a signature mismatch and its immediate rejection.
