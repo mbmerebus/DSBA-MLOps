@@ -48,7 +48,7 @@ async function loadHistory() {
         <div class="history-item">
           <div>
             ${h.estimate_name ? `<span class="hist-name">${h.estimate_name}</span>` : ""}
-            <span class="hist-price">€${h.result.predicted_price.toLocaleString("fr-FR")}</span>
+            <span class="hist-price"> : €${h.result.predicted_price.toLocaleString("fr-FR")}</span>
             <span class="hist-meta">${h.input.type_local} · ${h.input.surface_reelle_bati}m² · Dept. ${h.input.code_departement}</span>
             <span class="hist-date">${new Date(h.timestamp).toLocaleString("fr-FR")}</span>
           </div>

@@ -81,6 +81,9 @@ Developpement:
 While the tool successfuly implements the key features metionned earlier, it can still be made better. Here are some ideas:
 
 - [Estimates]: Implement a true confidence interval system. A statistically rigorous one would require a more complex approach like quantile regression.
+- [Estimates]: Improve scoring model performances so estimates are closer to reality/more reliable.
+- [Deployment]: Have Docker images stored on DockerHub or another service, and implement Kubernetes to deploy a complete microservice infrastructure (services not running in the same container/machine).
+- [Accessibility]: Add tooltips and better error messages to help the user navigate and use the different functions.
 
 
 

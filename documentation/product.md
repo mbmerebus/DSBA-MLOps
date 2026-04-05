@@ -27,11 +27,11 @@ _These are some user-stories for the tool aimed at professional in the real esta
 ### Account
 Users can create and account (i.e register) and login into their own account. A user's session spans 24h and is stopped past this delay. The user will need to login again afterward.
 
-Account registration screen:
-![register](screenshots/auth/register_scren.png)
+Account registration screen:\
+<img src="screenshots/auth/register_scren.png" alt="Dashboard" width="700" />
 
-Login screen:
-![register](screenshots/auth/login_screen.png)
+Login screen:\
+<img src="screenshots/auth/login_screen.png" alt="Dashboard" width="700" />
 
 ### Single Property Estimate
 The core feature of the tool. The user can fill in a short form with the following property details:
@@ -49,20 +49,20 @@ The core feature of the tool. The user can fill in a short form with the followi
 The tool will then return an estimated value in euros along with a price range which reflects the uncertainty of the estimate.
 NOTE: _Estimate Name is encrypted in database just in case a user inputs sentitive information such as their adress or name._
 
-Dashboard with a prediction made
-![register](screenshots/auth/pred_dash_screen.png)
+Dashboard with a prediction made:\
+<img src="screenshots/dash/dash_with_estimates.png" alt="Dashboard" width="700"/>
 
 ### Batch Estimation
 For professional use cases, the user can upload a CSV file containing multiple properties. The tool processes all rows and returns an estimate for each one. The CSV must contain the same fields as the single estimation form.
 
-Area for batch estimation (importing a CSV file):
-![register](screenshots/auth/batch_screen.png)
+Area for batch estimation (importing a CSV file):\
+<img src="screenshots/dash/batch_screen.png" alt="Dashboard" width="700" />
 
 ### History
 Every estimate is automatically saved to the user's account. The history panel displays past estimates with the input details, the predicted value, the price range, and the date of the estimate. History persist across sessions.
 
-Estimations history:
-![register](screenshots/auth/history_screen.png)
+Estimations history:\
+<img src="screenshots/dash/history_with_estimates.png" alt="Dashboard" width="300" />
 
 
 

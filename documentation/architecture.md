@@ -14,7 +14,7 @@ Other pages:
 The application is built as a set of independent services, each responsible for a single
 concern.
 
-Schémas
+![architecture scheme](doc_images/architecture_scheme.png)
 
 ---
 
