@@ -36,7 +36,7 @@ Services affected are Authentication (`auth`), Gateway (`gateway`) and History (
 
 The fact the user can open a session on the service is controlled by a token (a JWT token) that has a set validaity timespan. After this timespan, the token is no longer valid and the user has to reconnect. The reasoning behind user sessiosn is twofold:
 
-- **Security**: without session control, a stolen token would be valid forever. By storing sessions in Redis with a 24-hour expiry, we can invalidate them on logout or let them expire automatically. If a token is compromised, the damage is limited by time.
+- **Security**: without session control, a stolen token would be valid forever. By storing sessions in Redis with a 1-hour expiry, we can invalidate them on logout or let them expire automatically. If a token is compromised, the damage is limited by time. Token validity is checked every minute.
 - **User accountability**: since estimates are tied to a user account, we need to ensure that only the legitimate user can access their history. Session validation on every request guarantees that. 
 
 ___

@@ -41,11 +41,11 @@ SECRET_KEY = os.getenv("JWT_SECRET")
 if not SECRET_KEY:
     raise RuntimeError("JWT_SECRET environment variable is not set.")
 
-# NOTE 24h expiry is a balance between user convenience and session security.
+# NOTE 1h expiry is a balance between user convenience and session security.
 # A shorter window would require frequent re-authentication and longer increases exposure
 # if a token is compromised.
 # NOTE Expiry time should be modified according to service provider security policy
-TOKEN_EXPIRY_HOURS = 24
+TOKEN_EXPIRY_HOURS = 1
 
 
 

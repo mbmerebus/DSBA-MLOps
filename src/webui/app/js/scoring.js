@@ -1,6 +1,13 @@
 window.addEventListener("DOMContentLoaded", () => {
-  if (window.location.pathname.includes("dash")) loadHistory();
+  if (window.location.pathname.includes("dash")) {
+    checkTokenExpiry();
+    loadHistory();
+    
+    setInterval(checkTokenExpiry, 60 * 1000);
+  }
 });
+
+
 
 async function scoreProperty() {
   clearMessage("score-message");

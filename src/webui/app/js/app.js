@@ -26,3 +26,22 @@ function switchTab(tab) {
   document.getElementById("tab-register").classList.toggle("active", tab === "register");
   clearMessage("auth-message");
 }
+
+function isTokenExpired() {
+  const token = getToken();
+  if (!token) return true;
+
+  try {
+    const payload = JSON.parse(atob(token.split(".")[1]));
+    return payload.exp * 1000 < Date.now();
+  } catch (e) {
+    return true;
+  }
+}
+
+function checkTokenExpiry() {
+  if (isTokenExpired()) {
+    localStorage.removeItem("token");
+    window.location.href = "/auth.html";
+  }
+}
