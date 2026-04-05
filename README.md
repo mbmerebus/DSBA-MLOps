@@ -89,6 +89,8 @@ While the tool successfuly implements the key features metionned earlier, it can
 - [Estimates]: Improve scoring model performances so estimates are closer to reality/more reliable.
 - [Deployment]: Have Docker images stored on DockerHub or another service, and implement Kubernetes to deploy a complete microservice infrastructure (services not running in the same container/machine -> better resilience and scalability).
 - [Accessibility]: Add tooltips and better error messages to help the user navigate and use the different functions.
+- [User Experience]: Add session prolongation invite at token expiration.
+- [User Experience and Scoring]: Make downloading estimation (history and batch) as CSV possible so the user can incorporate it inside their tools easily.
 
 
 
