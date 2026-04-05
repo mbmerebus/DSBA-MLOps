@@ -65,6 +65,7 @@ services:
       - "8003:8003"
     environment:
       - REDIS_HOST=redis-history
+      - ESTIMATE_ENCRYPTION_KEY=${ESTIMATE_ENCRYPTION_KEY}
     depends_on:
       - redis-history
 

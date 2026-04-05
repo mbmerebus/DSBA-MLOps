@@ -25,22 +25,7 @@ Two main audiences:
 - **Individuals**: anyone looking to buy, sell, or simply understand the value of a property without the need to commit to a professional service
 - **Real estate professionals**: agents or analysts who need to quickly check or estimate multiple property values from a portfolio
 
-
-Account registration screen:
-![register](documentation/screenshots/auth/register_scren.png)
-
-Login screen:
-![register](documentation/screenshots/auth/login_screen.png)
-
-Dashboard with a prediction made:
-![register](documentation/screenshots/auth/pred_dash_screen.png)
-
-Estimations history:
-![register](documentation/screenshots/auth/history_screen.png)
-
-Area for batch estimation (importing a CSV file):
-![register](documentation/screenshots/auth/batch_screen.png)
-
+For user stories, you can read the [User Stories and Detailed Functionnalities](documentation/product.md) page.
 
 ## Key functionnalities ?
 Here are key functionnalities of the tool:
@@ -52,13 +37,9 @@ Here are key functionnalities of the tool:
 
 _Data for Alsace and Moselle are not available. As such, estimates of those two regions are not available._
 
-
-
-
-
 ## Read further - Documentation
 The following pages gove more details on inner works of the product and reasoning behind technical choices:
-- [Detailed functionnalities](documentation/product.md)
+- [User Stories and Detailed Functionnalities](documentation/product.md)
 - [Architecture](documentation/architecture.md)
 - [Machine Learning for Property Scoring](documentation/scoring.md)
 - [Authentication and security](documentation/security.md)

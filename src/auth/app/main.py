@@ -14,7 +14,7 @@ from fastapi.middleware.cors import CORSMiddleware
 app = FastAPI(title="Auth Service")
 
 
-# CORS POLICY — DEVELOPMENT ONLY
+# NOTE CORS POLICY — DEVELOPMENT ONLY
 # Cross-Origin Resource Sharing (CORS) controls which domains are allowed to make
 # requests to this API.
 # (allow_origins=["*"]) is intentionally permissive to allow the frontend to communicate
@@ -34,24 +34,34 @@ class UserCredentials(BaseModel):
     username: str
     password: str
 
-#if env file is found we get the secret key inside, else notify user
 SECRET_KEY = os.getenv("JWT_SECRET")
 if not SECRET_KEY:
     raise RuntimeError("JWT_SECRET environment variable is not set.")
+
+# NOTE 24h expiry is a balance between user convenience and session security.
+# A shorter window would require frequent re-authentication and longer increases exposure
+# if a token is compromised.
+# NOTE Expiry time should be modified according to service provider security policy
 TOKEN_EXPIRY_HOURS = 24
 
-#auth has its own redis db file
+
+
+# NOTE auth has its own redis db file so there can be not data corruption by other services
+# it validates the separation of concerns principles of microservice architecture
+# NOTE Default points to the redis-auth container name as defined in docker-compose for dev purpose.
+# Change this to the actual host if deploying outside of Docker Compose.
 r = redis.Redis(host=os.getenv("REDIS_HOST", "redis-auth"), port=6379, decode_responses=True)
 security = HTTPBearer()
 
 
 
-
-# register and login/logout part
 @app.post("/register")
 def register(credentials: UserCredentials):
     if r.exists(f"user:{credentials.username}"):
         raise HTTPException(status_code=400, detail="User already exists.")
+    
+    # NOTE bcrypt is used because it is a one-way hashing algorithm designed to be slow,
+    # it makes brute force attacks computationally expensive even with direct database access.
     hashed = bcrypt.hashpw(credentials.password.encode(), bcrypt.gensalt()).decode()
     r.set(f"user:{credentials.username}", hashed)
     return {"message": "User registered successfully."}
@@ -60,7 +70,7 @@ def register(credentials: UserCredentials):
 @app.post("/login")
 def login(credentials: UserCredentials):
     stored_hash = r.get(f"user:{credentials.username}")
-    if not stored_hash or not bcrypt.checkpw(credentials.password.encode(), stored_hash.encode()):
+    if not stored_hash or not bcrypt.checkpw(credentials.password.encode(), stored_hash.encode()): #hash decode
         raise HTTPException(status_code=401, detail="Invalid credentials.")
     token = jwt.encode(
         {"sub": credentials.username, "exp": datetime.utcnow() + timedelta(hours=TOKEN_EXPIRY_HOURS)},

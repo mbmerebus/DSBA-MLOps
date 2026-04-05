@@ -60,8 +60,8 @@ def score(property: PropertyItem) -> dict:
     return {
         "predicted_price": round(float(pred), 2),
         "confidence_interval": { #for debug or feature 
-            "low": round(float(pred * 0.85), 2),
-            "high": round(float(pred * 1.15), 2),
+            "low": round(float(pred * 0.80), 2),
+            "high": round(float(pred * 1.20), 2),
         }
     }
 
@@ -74,12 +74,18 @@ def score_batch(df: pd.DataFrame) -> list:
     df = handle_df(df)
     preds = np.expm1(model.predict(df))
 
+    # NOTE The price range is computed as +/- 20% around the predicted value.
+    # This is a simplification and not a statistically derived confidence interval
+    # a proper approach would require quantile regression or bootstrapping
+    # The range is consistent with the observed average error
+    # on the test set and should be read as a rough indicative bracket not a guarantee.
+
     list_of_pred = [
         {
             "predicted_price": round(float(p), 2),
             "confidence_interval": {
-                "low": round(float(p * 0.85), 2),
-                "high": round(float(p * 1.15), 2),
+                "low": round(float(p * 0.80), 2),
+                "high": round(float(p * 1.20), 2),
             }
         }
         for p in preds

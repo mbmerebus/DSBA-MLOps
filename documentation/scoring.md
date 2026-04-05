@@ -58,7 +58,7 @@ Lauching the training CLI gives the following output in the terminal:
 
 The MSE represents the error squared, **which makes the value seem really big. In practice, predictions are typically within + or - 20% of the actual declared value** (for a 200 000 euros property the estimate would be between 160 000 and 240 000 euros. The cross-validation score (CV RMSE) of 0.93 shows the model can predict a 2.5x higher or lower than the true property price. **This is good enough to present a value bracket indication, but shouldn't (and is not meant to) be used as a precise valuation.**
 
-### Confidence Interval
+### Price Range
 
 The tool includes a price range for each estimate (like 180 000 euros to 220 000 euros) that is directly based on the training results discussed before.
 
@@ -69,6 +69,6 @@ The range is computed as **+ or - 20% around the predicted value**. It is a simp
 
 The model can be retrained at any moment using the training CLI. The scoring service will load the most recently trained model at startup.
 
-```python src/training/cli.py --data inputs/full.csv```
+```python cli.py train --data inputs/full.csv```
 The trained model is saved as a timestamped `.pkl` file in `src/scoring/model_storage/`.
 

@@ -42,15 +42,27 @@ def preprocess_data(df):
     - separate features and target
     - set up the preprocessor for categorical and numerical features
     """
+
+    # NOTE 90th percentile is used instead of 95th because testing showed the 95th let in too much
+    # variance from exceptional properties (large estates, luxury assets, especially in Paris-75) without meaningfully
+    # improving coverage of typical use cases. Most often than not it decreases the model performance (high MSE)
     df = df[df["valeur_fonciere"] < df["valeur_fonciere"].quantile(0.90)] #remove outliers
-    #NOTE : focus on maison and appartement is made to remove more "exotic" data
-    #and thus improve MSE score
+
+
+    #NOTE : focus on `maison` and `appartement` is made to remove more "exotic" data that may
+    # not have enough rows linked to it.
+    # not enough rows means the model will not be able to learn from the patter well and
+    # will increase MSE score (which we don't want as it is error squared)
     df = df[df["type_local"].isin(["Maison", "Appartement"])]
 
+    # we don't want the model to learn the target.
     X = df.drop("valeur_fonciere", axis=1) #features
+
+    # NOTE log1p is applied to the target because property values follow a strongly right-skewed
+    # distribution. The log transformation normalizes it, which improves model performance.
+    # predictions must be reversed with expm1 before being returned to the user.
     y = np.log1p(df["valeur_fonciere"]) #target
 
-    #handling for categorical and numerical features
     numeric_features = [
         "surface_reelle_bati",
         "nombre_pieces_principales",
@@ -68,9 +80,11 @@ def preprocess_data(df):
     )
     return X, y, preprocessor
 
-#NOTE: the model is saved in the scoring API folder, and later loaded into the scoring service container.
+#NOTE: The model is currently saved localy and then loaded inside the scoring service container.
+# In production, the .pkl model file should be stored in an Object Storage service like S3 or GCS
+# That means also modifiying the function so it pushes into this storage instead of local
 def save_model(model, path_model: str):
-    """Save the trained model to a file"""
+    """Save the trained model to a file in 'scoring/model_storage' """
 
     dir_name = os.path.dirname(path_model)
 

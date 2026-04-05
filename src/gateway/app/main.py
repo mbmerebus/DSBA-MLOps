@@ -22,11 +22,12 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-#adresses to services
+# NOTE Default values match the container names defined in docker-compose (local development only).
+# In production, these must be set explicitly as environment variables (each one of them).
 AUTH_SERVICE = os.getenv("AUTH_SERVICE_URL", "http://auth:8001")
 SCORING_SERVICE = os.getenv("SCORING_SERVICE_URL", "http://scoring-api:8000")
 HISTORY_SERVICE = os.getenv("HISTORY_SERVICE_URL", "http://history:8003")
-security = HTTPBearer() #services communicate through http
+security = HTTPBearer()
 
 
 async def require_auth(credentials: HTTPAuthorizationCredentials = Depends(security)):
@@ -46,18 +47,20 @@ async def score(request: Request, username: str = Depends(require_auth)):
     body = await request.json()
     async with httpx.AsyncClient() as client:
         resp = await client.post(f"{SCORING_SERVICE}/score", json=body)
+    if resp.status_code != 200:
+        raise HTTPException(status_code=resp.status_code, detail=resp.json())
     result = resp.json()
     async with httpx.AsyncClient() as client:
         await client.post(f"{HISTORY_SERVICE}/estimates", json={
             "username": username,
             "input": body,
-            "result": result
+            "result": result,
+            "estimate_name": body.get("estimate_name", "New estimate")
         })
     return result
 
 
 @app.post("/score/batch")
-#NOTE: opens a file search window
 async def score_batch(file: UploadFile = File(...), username: str = Depends(require_auth)):
     contents = await file.read()
     async with httpx.AsyncClient(timeout=120.0) as client:
@@ -67,8 +70,6 @@ async def score_batch(file: UploadFile = File(...), username: str = Depends(requ
         )
     return resp.json()
 
-
-#User estimates history handling
 @app.get("/history")
 async def history(username: str = Depends(require_auth)):
     async with httpx.AsyncClient() as client:

@@ -38,6 +38,7 @@ The core feature of the tool. The user can fill in a short form with the followi
 
 | Field | Description |
 |---|---|
+| Estimate Name (Optional) | A name for easy identification in estimation history |
 | Surface (m²) | Built surface area of the property |
 | Rooms | Number of main rooms |
 | Department Code | French department (like 75 for Paris) |
@@ -46,6 +47,7 @@ The core feature of the tool. The user can fill in a short form with the followi
 | Land Surface (m²) | Total land area (relevant for houses) |
 
 The tool will then return an estimated value in euros along with a price range which reflects the uncertainty of the estimate.
+NOTE: _Estimate Name is encrypted in database just in case a user inputs sentitive information such as their adress or name._
 
 Dashboard with a prediction made
 ![register](screenshots/auth/pred_dash_screen.png)
