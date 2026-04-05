@@ -58,6 +58,9 @@ For professional use cases, the user can upload a CSV file containing multiple p
 Area for batch estimation (importing a CSV file):\
 <img src="screenshots/dash/batch_screen.png" alt="Dashboard" width="700" />
 
+With estimations made:\
+<img src="screenshots/dash/batch_estimations.png" alt="Dashboard" width="700" />
+
 ### History
 Every estimate is automatically saved to the user's account. The history panel displays past estimates with the input details, the predicted value, the price range, and the date of the estimate. History persist across sessions.
 
